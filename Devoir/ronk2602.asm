@@ -15,30 +15,30 @@ main:
 	la $a2, metriques
 	jal calculSurvivants
 	
-	li      $v0     1                   # syscall va print un entier si $v0 set a 1
-    la      $t0     soutput				# on met soutput dans $t0
-    lw      $a0     0($t0)				# on load soutput[0] dans $a0
+	li $v0, 1                  			# syscall va print un entier si $v0 set a 1
+    la $t0, soutput						# on met soutput dans $t0
+    lw $a0, 0($t0)						# on load soutput[0] dans $a0
     syscall                             # print soutput[0]
-    li      $a0     32					# on load un espace dans $a0, 32 est la valeur du code ASCII
-    li      $v0     11					# on load 11 dans $v0 pour que syscall print un char
+    li $a0, 32							# on load un espace dans $a0, 32 est la valeur du code ASCII
+    li $v0, 11							# on load 11 dans $v0 pour que syscall print un char
     syscall                             # print un espace
-    li      $v0     1
-    lw      $a0     4($t0)
+    li $v0, 1
+    lw $a0, 4($t0)
     syscall                             # print soutput[1]
-    li      $a0     32
-    li      $v0     11
+    li $a0, 32
+    li $v0, 11
     syscall                             # print un espace
-    li      $v0     1
-    lw      $a0     8($t0)
+    li $v0, 1
+    lw $a0, 8($t0)
     syscall                             # print soutput[2]
-    li      $a0     32
-    li      $v0     11
+    li $a0, 32
+    li $v0, 11
     syscall                             # print un espace
-    li      $v0     1
-    lw      $a0     12($t0)
+    li $v0, 1
+    lw $a0, 12($t0)
     syscall                             # print soutput[3]
 	
-    li      $v0     10
+    li $v0, 10
     syscall                            
 
 # void CalculSurvivants( unsigned int *met, int *sinput, int *soutput)
