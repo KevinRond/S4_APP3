@@ -92,26 +92,13 @@ fin_calculSurvivants:
 	
 # void acs(unsigned *met, int *sinput, int *soutput)
 acs:
-	li $t3, 0							# initiation de notre index j
-	li $t4, 4							# Valeur de N
-	
-
-loop_acs:
-	beq $t3, $t4, fin_acs				# si j < N
-	lw $t5, 0($a2)						# pointer met
-	lw $t6, 0($a0)						# pointer sinput
-	
-	addu $t5, $t5, $t6 					# add met[j] + sinput[j] for temp variable
-	
-	lw $t6, 0($a1)						# load la valeur soutput existante
-	bgeu $t5, $t6, condition_acs		# if temp < sinput, on remplace la valeur de soutput existante
-	sw $t5, 0($a1)
-	
-condition_acs:
-	addiu $a0, $a0, 4					# update les pointers pour met et sinput pour pointer vers l'element j
-	addiu $a2, $a2, 4				
-	addiu $t3, $t3, 1					# incrementer l'index
-	j loop_acs
+	lwv $v0, 0($a2)
+	lwv $v1, 0($a0)
+	addv $v0, $v0, $v1
+	lwv $v1, 0($a1)
+	vmin $v0, $v0, $v1
+	swv $v0, 0($a1)
+	j fin_acs
 	
 fin_acs:
 	jr $ra
