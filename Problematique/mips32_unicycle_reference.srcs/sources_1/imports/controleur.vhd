@@ -76,7 +76,7 @@ begin
 			when OP_LW => 
 				o_AluFunct <= ALU_ADD;
 			when OP_LWV => 
-				o_AluFunct <= ALU_ADDV;
+				o_AluFunct <= ALU_ADDV; -- je penses pas que ca sest bon ici
             -- when OP_??? =>   -- autres cas?
 			-- sinon
             when others =>
