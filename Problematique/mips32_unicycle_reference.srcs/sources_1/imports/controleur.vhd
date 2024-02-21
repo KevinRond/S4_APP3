@@ -71,8 +71,12 @@ begin
 				o_AluFunct <= ALU_NULL;
 			when OP_SW => 
 				o_AluFunct <= ALU_ADD;
+			when OP_SWV => 
+				o_AluFunct <= ALU_ADDV;
 			when OP_LW => 
 				o_AluFunct <= ALU_ADD;
+			when OP_LWV => 
+				o_AluFunct <= ALU_ADDV;
             -- when OP_??? =>   -- autres cas?
 			-- sinon
             when others =>
@@ -111,6 +115,10 @@ begin
             when ALUF_MFLO => 
                 s_R_funct_decode <= ALU_NULL; 
             -- à compléter au besoin avec d'autres instructions
+            when ALUF_ADDV =>
+                s_R_funct_decode <= ALU_ADDV;
+            when ALUF_VMIN =>
+                s_R_funct_decode <= ALU_VMIN;
             when others =>
                 s_R_funct_decode <= ALU_NULL;
          end case;
@@ -123,6 +131,7 @@ begin
 								i_Op = OP_ORI or 
 								i_Op = OP_LUI or 
 								i_Op = OP_LW or 
+								i_Op = OP_LWV or 
 								i_Op = OP_JAL
 						else '0';
 	
@@ -132,9 +141,15 @@ begin
 								i_Op = OP_BEQ
 						else '1';
 	o_Branch 		<= '1' when i_Op = OP_BEQ   else '0';
-	o_MemRead 		<= '1' when i_Op = OP_LW else '0';
-	o_MemWrite 		<= '1' when i_Op = OP_SW else '0';
-	o_MemtoReg 		<= '1' when i_Op = OP_LW else '0';
+	o_MemRead 		<= '1' when i_Op = OP_LW or
+	                            i_Op = OP_LWV
+	                       else '0';
+	o_MemWrite 		<= '1' when i_Op = OP_SW or
+	                            i_Op = OP_SWV
+	                       else '0';
+	o_MemtoReg 		<= '1' when i_Op = OP_LW or
+	                            i_Op = OP_LWV
+	                       else '0';
 	o_SignExtend	<= '1' when i_OP = OP_ADDI or
 	                           i_OP = OP_BEQ 
 	                     else '0';

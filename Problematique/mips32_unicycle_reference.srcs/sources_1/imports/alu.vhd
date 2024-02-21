@@ -53,6 +53,28 @@ begin
                 s_result <= i_a nor i_b;
             when ALU_ADD => 
                 s_result <= std_logic_vector(signed(i_a) + signed(i_b));
+            when ALU_ADDV =>
+            -- Les mots en input sont divises en 4 entiers de 8 bits 
+            -- Cependant, le MSB de chaque entier devrait etre 0 pour eviter un overflow
+            -- Donc min-max valeurs sont 0 - 127
+                for i in 0 to 3 loop
+                    -- Itere au travers des 4 entiers et on les additionne
+                    s_result(i*8+7 downto i*8) <= std_logic_vector(unsigned(i_a(i*8+7 downto i*8)) + unsigned(i_b(i*8+7 downto i*8)));
+                    
+                    -- Cas ou il y a un overflow, on met la valeur max qui est 127
+                    if s_result(i*8+7) = '1' then
+                        s_result(i*8+7 downto i*8) <= "01111111";
+                    end if;
+                end loop;
+            when ALU_VMIN =>
+                for i in 0 to 3 loop
+                    -- Comparaison des 4 entiers de 8 bits et selection du plus petit.
+                    if unsigned(i_a(i*8+7 downto i*8)) < unsigned(i_b(i*8+7 downto i*8)) then
+                        s_result(i*8+7 downto i*8) <= i_a(i*8+7 downto i*8);
+                    else
+                        s_result(i*8+7 downto i*8) <= i_b(i*8+7 downto i*8);
+                    end if;
+                end loop;
             when ALU_SUB => 
                 s_result <= std_logic_vector(signed(i_a) - signed(i_b));
             when ALU_SLL => 
