@@ -72,12 +72,11 @@ begin
 			when OP_SW => 
 				o_AluFunct <= ALU_ADD;
 			when OP_SWV => 
-				o_AluFunct <= ALU_ADDV;
+				o_AluFunct <= ALU_ADD;
 			when OP_LW => 
 				o_AluFunct <= ALU_ADD;
 			when OP_LWV => 
-				o_AluFunct <= ALU_ADDV; -- je penses pas que ca sest bon ici
-            -- when OP_??? =>   -- autres cas?
+				o_AluFunct <= ALU_ADD; 
 			-- sinon
             when others =>
 				o_AluFunct <= (others => '0');

@@ -67,12 +67,13 @@ begin
                     end if;
                 end loop;
             when ALU_VMIN =>
+                -- Cette fonction compare un vecteur de 4 entiers avec un entier
+                -- Lorsque l'un des 4 entiers est plus petit que l'entier, 
+                -- la nouvelle sortie devient la valeur qui etait dans le vecteur
+                s_result <= std_logic_vector(i_b);
                 for i in 0 to 3 loop
-                    -- Comparaison des 4 entiers de 8 bits et selection du plus petit.
-                    if unsigned(i_a(i*8+7 downto i*8)) < unsigned(i_b(i*8+7 downto i*8)) then
-                        s_result(i*8+7 downto i*8) <= i_a(i*8+7 downto i*8);
-                    else
-                        s_result(i*8+7 downto i*8) <= i_b(i*8+7 downto i*8);
+                    if unsigned(i_a(i*8+7 downto i*8)) < unsigned(s_result) then
+                        s_result(7 downto 0) <= i_a(i*8+7 downto i*8);
                     end if;
                 end loop;
             when ALU_SUB => 
