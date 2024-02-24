@@ -38,6 +38,7 @@ end MemDonneesWideDual;
 
 architecture Behavioral of MemDonneesWideDual is
     signal ram_DataMemory : RAM(0 to 255) := ( -- type défini dans le package
+  
 ------------------------
 -- Insérez vos donnees ici
 ------------------------
@@ -49,7 +50,6 @@ architecture Behavioral of MemDonneesWideDual is
 
     signal s_MemoryIndex 	: integer range 0 to 255; -- 0-127
 	signal s_MemoryRangeValid 	: std_logic;
-	
     signal s_WideMemoryRangeValid  : std_logic;
 
 begin

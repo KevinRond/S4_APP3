@@ -27,7 +27,9 @@ Port (
     o_MemtoReg  	: out std_logic;
     o_AluFunct  	: out std_logic_vector (3 downto 0);
     o_MemRead   	: out std_logic;
+    o_MemReadWide   : out std_logic;
     o_MemWrite  	: out std_logic;
+    o_MemWriteWide  : out std_logic;
     o_ALUSrc    	: out std_logic;
     o_RegWrite  	: out std_logic;
 	
@@ -139,13 +141,11 @@ begin
 	o_ALUSrc 		<= '0' when i_Op = OP_Rtype or
 								i_Op = OP_BEQ
 						else '1';
-	o_Branch 		<= '1' when i_Op = OP_BEQ   else '0';
-	o_MemRead 		<= '1' when i_Op = OP_LW or
-	                            i_Op = OP_LWV
-	                       else '0';
-	o_MemWrite 		<= '1' when i_Op = OP_SW or
-	                            i_Op = OP_SWV
-	                       else '0';
+	o_Branch 		<= '1' when i_Op = OP_BEQ  else '0';
+	o_MemRead 		<= '1' when i_Op = OP_LW   else '0';
+	o_MemReadWide 	<= '1' when i_Op = OP_LWV  else '0';
+	o_MemWrite 		<= '1' when i_Op = OP_SW   else '0';
+	o_MemWriteWide 	<= '1' when i_Op = OP_SWV  else '0';
 	o_MemtoReg 		<= '1' when i_Op = OP_LW or
 	                            i_Op = OP_LWV
 	                       else '0';
