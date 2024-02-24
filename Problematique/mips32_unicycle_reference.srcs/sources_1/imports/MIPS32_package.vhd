@@ -81,6 +81,7 @@ package MIPS32_package is
 	constant c_Mips32_Flush	: std_logic_vector(31 downto 0) := X"00000001";
     
     type RAM is array (natural range <>) of std_logic_vector (31 downto 0);
+    type RAM128 is array (natural range <>) of std_logic_vector (127 downto 0);
 						
 	
     type op_type is (
