@@ -30,8 +30,7 @@ entity BancRegistres is
 end BancRegistres;
 
 architecture comport of BancRegistres is
-    signal regs: RAM128(0 to 31) := (29 => X"100103FC", -- registre $SP
-                                others => (others => '0'));
+    signal regs: RAM128(0 to 127) := (29 => X"000000000000000000000000100103FC", others => (others => '0'));
               
 begin
     process( clk )

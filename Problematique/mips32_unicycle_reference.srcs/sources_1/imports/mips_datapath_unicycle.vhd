@@ -42,7 +42,7 @@ Port (
 	i_SignExtend 	: in std_logic;
 
 	o_Instruction 	: out std_logic_vector (31 downto 0);
-	o_PC		 	: out std_logic_vector (31 downto 0)
+	o_PC		 	: out std_logic_vector (127 downto 0)
 );
 end mips_datapath_unicycle;
 
@@ -61,8 +61,8 @@ Port (
 	i_MemRead 	: in std_logic;
 	i_MemWrite : in std_logic;
     i_Addresse : in std_logic_vector (31 downto 0);
-	i_WriteData : in std_logic_vector (31 downto 0);
-    o_ReadData : out std_logic_vector (31 downto 0)
+	i_WriteData : in std_logic_vector (127 downto 0);
+    o_ReadData : out std_logic_vector (127 downto 0)
 );
 end component;
 
@@ -72,22 +72,22 @@ end component;
 		reset : in std_logic;
 		i_RS1 : in std_logic_vector (4 downto 0);
 		i_RS2 : in std_logic_vector (4 downto 0);
-		i_Wr_DAT : in std_logic_vector (31 downto 0);
+		i_Wr_DAT : in std_logic_vector (127 downto 0);
 		i_WDest : in std_logic_vector (4 downto 0);
 		i_WE : in std_logic;
-		o_RS1_DAT : out std_logic_vector (31 downto 0);
-		o_RS2_DAT : out std_logic_vector (31 downto 0)
+		o_RS1_DAT : out std_logic_vector (127 downto 0);
+		o_RS2_DAT : out std_logic_vector (127 downto 0)
 		);
 	end component;
 
 	component alu is
 	Port ( 
-		i_a			: in std_logic_vector (31 downto 0);
-		i_b			: in std_logic_vector (31 downto 0);
+		i_a			: in std_logic_vector (127 downto 0);
+		i_b			: in std_logic_vector (127 downto 0);
 		i_alu_funct	: in std_logic_vector (3 downto 0);
 		i_shamt		: in std_logic_vector (4 downto 0);
-		o_result	: out std_logic_vector (31 downto 0);
-	    o_multRes   : out std_logic_vector (63 downto 0);
+		o_result	: out std_logic_vector (127 downto 0);
+	    o_multRes   : out std_logic_vector (255 downto 0);
 		o_zero		: out std_logic;
 		o_Adresse   : out std_logic_vector(31 downto 0)
 		);
@@ -98,11 +98,11 @@ end component;
 	
     signal s_WriteRegDest_muxout: std_logic_vector(4 downto 0);
 	
-    signal r_PC                    : std_logic_vector(31 downto 0);
-    signal s_PC_Suivant            : std_logic_vector(31 downto 0);
-    signal s_adresse_PC_plus_4     : std_logic_vector(31 downto 0);
-    signal s_adresse_jump          : std_logic_vector(31 downto 0);
-    signal s_adresse_branche       : std_logic_vector(31 downto 0);
+    signal r_PC                    : std_logic_vector(127 downto 0);
+    signal s_PC_Suivant            : std_logic_vector(127 downto 0);
+    signal s_adresse_PC_plus_4     : std_logic_vector(127 downto 0);
+    signal s_adresse_jump          : std_logic_vector(127 downto 0);
+    signal s_adresse_branche       : std_logic_vector(127 downto 0);
     
     signal s_Instruction : std_logic_vector(31 downto 0);
 
@@ -113,25 +113,25 @@ end component;
     signal s_shamt       : std_logic_vector( 4 downto 0);
     signal s_instr_funct : std_logic_vector( 5 downto 0);
     signal s_imm16       : std_logic_vector(15 downto 0);
-    signal s_jump_field  : std_logic_vector(25 downto 0);
-    signal s_reg_data1        : std_logic_vector(31 downto 0);
-    signal s_reg_data2        : std_logic_vector(31 downto 0);
+    signal s_jump_field  : std_logic_vector(121 downto 0);
+    signal s_reg_data1        : std_logic_vector(127 downto 0);
+    signal s_reg_data2        : std_logic_vector(127 downto 0);
     signal s_AluResult             : std_logic_vector(127 downto 0);
-    signal s_AluMultResult          : std_logic_vector(63 downto 0);
+    signal s_AluMultResult          : std_logic_vector(255 downto 0);
     signal s_aluAdresse  : std_logic_vector(31 downto 0);
     
-    signal s_Data2Reg_muxout       : std_logic_vector(31 downto 0);
+    signal s_Data2Reg_muxout       : std_logic_vector(127 downto 0);
     
-    signal s_imm_extended          : std_logic_vector(31 downto 0);
+    signal s_imm_extended          : std_logic_vector(127 downto 0);
     signal s_imm_extended_shifted  : std_logic_vector(31 downto 0);
 	
     signal s_Reg_Wr_Data           : std_logic_vector(31 downto 0);
-    signal s_MemoryReadData        : std_logic_vector(31 downto 0);
-    signal s_AluB_data             : std_logic_vector(31 downto 0);
+    signal s_MemoryReadData        : std_logic_vector(127 downto 0);
+    signal s_AluB_data             : std_logic_vector(127 downto 0);
     
     -- registres spéciaux pour la multiplication
-    signal r_HI             : std_logic_vector(31 downto 0);
-    signal r_LO             : std_logic_vector(31 downto 0);
+    signal r_HI             : std_logic_vector(127 downto 0);
+    signal r_LO             : std_logic_vector(127 downto 0);
 	
 
 begin
@@ -148,7 +148,7 @@ s_RD            <= s_Instruction(15 downto 11);
 s_shamt         <= s_Instruction(10 downto  6);
 s_instr_funct   <= s_Instruction( 5 downto  0);
 s_imm16         <= s_Instruction(15 downto  0);
-s_jump_field	<= s_Instruction(25 downto  0);
+s_jump_field <= s_Instruction(25 downto 0) & (121 downto 26 => '0');
 ------------------------------------------------------------------------
 
 
@@ -159,7 +159,7 @@ process(clk)
 begin
     if(clk'event and clk = '1') then
         if(reset = '1') then
-            r_PC <= X"00400000";
+            r_PC <= X"00000000000000000000000000400000";
         else
             r_PC <= s_PC_Suivant;
         end if;
@@ -183,7 +183,7 @@ s_PC_Suivant		<= s_adresse_jump when i_jump = '1' else
 ------------------------------------------------------------------------
 inst_MemInstr: MemInstructions
 Port map ( 
-	i_addresse => r_PC,
+	i_addresse => r_PC(31 downto 0),
     o_instruction => s_Instruction
     );
 
@@ -268,8 +268,8 @@ process(clk)
 begin
     if(clk'event and clk = '1') then
         if(i_alu_mult = '1') then
-            r_HI <= s_AluMultResult(63 downto 32);
-            r_LO <= s_AluMultResult(31 downto 0);
+            r_HI <= s_AluMultResult(255 downto 128);
+            r_LO <= s_AluMultResult(127 downto 0);
         end if;
     end if;
 end process;

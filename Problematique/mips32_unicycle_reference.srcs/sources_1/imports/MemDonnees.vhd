@@ -49,7 +49,7 @@ X"0000000000000000000000005555cccc",
 ------------------------
 -- Fin de votre code
 ------------------------
-    others => X"00000000");
+    others => X"00000000000000000000000000000000");
 
     signal s_MemoryIndex 	: integer range 0 to 255; -- 0-127
 	signal s_MemoryRangeValid 	: std_logic;

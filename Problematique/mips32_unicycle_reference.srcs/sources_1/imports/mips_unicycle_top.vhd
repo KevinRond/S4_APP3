@@ -22,7 +22,7 @@ entity mips_unicycle_top is
 Port ( 
 	clk 				: in std_logic;
 	reset 			: in std_logic;
-	o_pc 			: out std_logic_vector (31 downto 0);
+	o_pc 			: out std_logic_vector (127 downto 0);
 	o_Instruction	: out std_logic_vector (31 downto 0);
 	o_zero 			: out std_logic
 	);
@@ -78,7 +78,7 @@ Port (
 	i_SignExtend 	: in std_logic;
 	
 	o_Instruction 	: out std_logic_vector (31 downto 0);
-	o_PC		 	: out std_logic_vector (31 downto 0)
+	o_PC		 	: out std_logic_vector (127 downto 0)
 );
 end component;
 
