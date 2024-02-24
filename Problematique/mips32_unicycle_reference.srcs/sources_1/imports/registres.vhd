@@ -22,16 +22,17 @@ entity BancRegistres is
            reset     : in  std_logic;
            i_RS1     : in  std_logic_vector (4 downto 0);
            i_RS2     : in  std_logic_vector (4 downto 0);
-           i_Wr_DAT  : in  std_logic_vector (31 downto 0);
+           i_Wr_DAT  : in  std_logic_vector (127 downto 0);
            i_WDest   : in  std_logic_vector (4 downto 0);
            i_WE 	 : in  std_logic;
-           o_RS1_DAT : out std_logic_vector (31 downto 0);
-           o_RS2_DAT : out std_logic_vector (31 downto 0));
+           o_RS1_DAT : out std_logic_vector (127 downto 0);
+           o_RS2_DAT : out std_logic_vector (127 downto 0));
 end BancRegistres;
 
 architecture comport of BancRegistres is
     signal regs: RAM(0 to 31) := (29 => X"100103FC", -- registre $SP
                                 others => (others => '0'));
+              
 begin
     process( clk )
     begin

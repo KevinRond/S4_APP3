@@ -17,23 +17,25 @@ use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 use work.MIPS32_package.all;
 
-entity alu is
+entity alu_vect is
 Port ( 
 	i_a          : in std_logic_vector (127 downto 0);
 	i_b          : in std_logic_vector (127 downto 0);
 	i_alu_funct  : in std_logic_vector (3 downto 0);
 	i_shamt      : in std_logic_vector (4 downto 0);
-	o_result     : out std_logic_vector (127 downto 0);
-	o_multRes    : out std_logic_vector (255 downto 0);
+	o_output_vector : std_logic;
+	o_result_vect     : out std_logic_vector (127 downto 0);
+	o_result     : out std_logic_vector (31 downto 0);
+	o_multRes    : out std_logic_vector (63 downto 0);
 	o_zero       : out std_logic
 	);
-end alu;
+end alu_vect;
 
-architecture comport of alu is
+architecture comport of alu_vect is
     
     signal decale 			: unsigned( 4 downto 0);
     signal s_result 		: std_logic_vector (127 downto 0);
-    signal s_multRes 		: std_logic_vector (255 downto 0);
+    signal s_multRes 		: std_logic_vector (63 downto 0);
     signal s_unsupported    : std_logic;
 	
 begin
@@ -86,15 +88,15 @@ begin
 				s_result <= std_logic_vector(signed(i_b) sll 16 ); 
             when ALU_SLT => 
                 if(signed(i_a) < signed(i_b)) then
-                    s_result <= X"00000000000000000000000000000001";      
+                    s_result <= X"00000001";      
                 else
-                    s_result <= X"00000000000000000000000000000000";
+                    s_result <= X"00000000";
                 end if;
             when ALU_SLTU => 
                 if(unsigned(i_a) < unsigned(i_b)) then
-                    s_result <= X"00000000000000000000000000000001";      
+                    s_result <= X"00000001";      
                 else
-                    s_result <= X"00000000000000000000000000000000";
+                    s_result <= X"00000000";
                 end if;
             when ALU_MULTU =>
                 s_multRes <= std_logic_vector(unsigned(i_a) * unsigned(i_b));
@@ -108,7 +110,8 @@ begin
      
      -- sorties spéciales, utiles pour certaines instructions
      o_zero <= '1' when (signed(s_result) = 0) else '0';
-	 o_result <= s_result;
+	 o_result_vect <= s_result;
+	 o_result <= s_result (31 downto 0);
 	 o_multRes <= s_multRes;
             
 end comport;

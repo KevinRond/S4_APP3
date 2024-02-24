@@ -140,13 +140,13 @@ begin
 								i_Op = OP_BEQ
 						else '1';
 	o_Branch 		<= '1' when i_Op = OP_BEQ   else '0';
-	o_MemRead 		<= '1' when i_Op = OP_LW or
+	o_MemRead 		<= '1' when i_Op = OP_LW or 
 	                            i_Op = OP_LWV
 	                       else '0';
 	o_MemWrite 		<= '1' when i_Op = OP_SW or
 	                            i_Op = OP_SWV
 	                       else '0';
-	o_MemtoReg 		<= '1' when i_Op = OP_LW or
+	o_MemtoReg 		<= '1' when i_Op = OP_LW or 
 	                            i_Op = OP_LWV
 	                       else '0';
 	o_SignExtend	<= '1' when i_OP = OP_ADDI or
