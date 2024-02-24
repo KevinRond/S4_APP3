@@ -149,6 +149,11 @@ begin
 	o_MemtoReg 		<= '1' when i_Op = OP_LW or 
 	                            i_Op = OP_LWV
 	                       else '0';
+--	o_aluResultIsAdresse	<= '1' when i_Op = OP_LW or 
+--	                            i_Op = OP_LWV or
+--	                            i_Op = OP_SW or
+--	                            i_Op = OP_SWV
+--	                       else '0';
 	o_SignExtend	<= '1' when i_OP = OP_ADDI or
 	                           i_OP = OP_BEQ 
 	                     else '0';

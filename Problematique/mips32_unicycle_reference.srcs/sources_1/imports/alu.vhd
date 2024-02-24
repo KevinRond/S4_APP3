@@ -25,7 +25,8 @@ Port (
 	i_shamt      : in std_logic_vector (4 downto 0);
 	o_result     : out std_logic_vector (127 downto 0);
 	o_multRes    : out std_logic_vector (255 downto 0);
-	o_zero       : out std_logic
+	o_zero       : out std_logic;
+	o_Adresse     : out std_logic_vector (31 downto 0)
 	);
 end alu;
 
@@ -109,6 +110,7 @@ begin
      -- sorties spéciales, utiles pour certaines instructions
      o_zero <= '1' when (signed(s_result) = 0) else '0';
 	 o_result <= s_result;
+	 o_Adresse <= s_result(31 downto 0);
 	 o_multRes <= s_multRes;
             
 end comport;

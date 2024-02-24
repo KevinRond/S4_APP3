@@ -87,8 +87,9 @@ end component;
 		i_alu_funct	: in std_logic_vector (3 downto 0);
 		i_shamt		: in std_logic_vector (4 downto 0);
 		o_result	: out std_logic_vector (31 downto 0);
-	    o_multRes    : out std_logic_vector (63 downto 0);
-		o_zero		: out std_logic
+	    o_multRes   : out std_logic_vector (63 downto 0);
+		o_zero		: out std_logic;
+		o_Adresse   : out std_logic_vector(31 downto 0)
 		);
 	end component;
 
@@ -115,8 +116,9 @@ end component;
     signal s_jump_field  : std_logic_vector(25 downto 0);
     signal s_reg_data1        : std_logic_vector(31 downto 0);
     signal s_reg_data2        : std_logic_vector(31 downto 0);
-    signal s_AluResult             : std_logic_vector(31 downto 0);
+    signal s_AluResult             : std_logic_vector(127 downto 0);
     signal s_AluMultResult          : std_logic_vector(63 downto 0);
+    signal s_aluAdresse  : std_logic_vector(31 downto 0);
     
     signal s_Data2Reg_muxout       : std_logic_vector(31 downto 0);
     
@@ -228,7 +230,8 @@ port map(
 	i_shamt     => s_shamt,
 	o_result    => s_AluResult,
 	o_multRes   => s_AluMultResult,
-	o_zero      => s_zero
+	o_zero      => s_zero,
+	o_Adresse   => s_aluAdresse
 	);
 
 ------------------------------------------------------------------------
@@ -240,7 +243,7 @@ Port map(
 	reset 		=> reset,
 	i_MemRead	=> i_MemRead,
 	i_MemWrite	=> i_MemWrite,
-    i_Addresse	=> s_AluResult,
+    i_Addresse	=> s_aluAdresse,
 	i_WriteData => s_reg_data2,
     o_ReadData	=> s_MemoryReadData
 	);

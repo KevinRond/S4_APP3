@@ -31,7 +31,7 @@ Port (
 end MemDonnees;
 
 architecture Behavioral of MemDonnees is
-    signal ram_DataMemory : RAM(0 to 255) := ( -- type défini dans le package
+    signal ram_DataMemory : RAM128(0 to 255) := ( -- type défini dans le package
 ------------------------
 -- Insérez vos donnees ici
 ------------------------
