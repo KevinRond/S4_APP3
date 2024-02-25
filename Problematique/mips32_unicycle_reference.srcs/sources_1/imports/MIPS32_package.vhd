@@ -23,8 +23,6 @@ package MIPS32_package is
     constant ALU_OR   : std_logic_vector( 3 downto 0 ) := "0001";
     constant ALU_ADD  : std_logic_vector( 3 downto 0 ) := "0010";
     constant ALU_SLTU : std_logic_vector( 3 downto 0 ) := "0011";
-    constant ALU_ADDV : std_logic_vector( 3 downto 0 ) := "0100";
-    constant ALU_VMIN : std_logic_vector( 3 downto 0 ) := "0101";
     constant ALU_SUB  : std_logic_vector( 3 downto 0 ) := "0110";
     constant ALU_SLT  : std_logic_vector( 3 downto 0 ) := "0111";
     
@@ -45,8 +43,6 @@ package MIPS32_package is
     constant ALUF_SRA       : std_logic_vector( 5 downto 0 ) := "000110";
     constant ALUF_JR        : std_logic_vector( 5 downto 0 ) := "001000";
     constant ALUF_MFHI      : std_logic_vector( 5 downto 0 ) := "010000";
-    constant ALUF_ADDV      : std_logic_vector( 5 downto 0 ) := "010001";
-    constant ALUF_VMIN      : std_logic_vector( 5 downto 0 ) := "010011";
     constant ALUF_MFLO      : std_logic_vector( 5 downto 0 ) := "010010";
     constant ALUF_MULTU     : std_logic_vector( 5 downto 0 ) := "011001";
     constant ALUF_ADD       : std_logic_vector( 5 downto 0 ) := "100000";
@@ -74,6 +70,8 @@ package MIPS32_package is
     constant OP_LWV   : std_logic_vector( 5 downto 0 ) := "100111";
     constant OP_SW    : std_logic_vector( 5 downto 0 ) := "101011";
     constant OP_SWV   : std_logic_vector( 5 downto 0 ) := "101111";
+    constant OP_ADDV  : std_logic_vector( 5 downto 0 ) := "110000";
+    constant OP_VMIN  : std_logic_vector( 5 downto 0 ) := "110001";
 	
 	
 	constant c_Mips32_Nop	 	: std_logic_vector(31 downto 0) := X"00000000";
@@ -128,8 +126,6 @@ package MIPS32_package is
         sim_alu_OR,
         sim_alu_NOR,
         sim_alu_ADD,
-        sim_alu_ADDV,
-        sim_alu_VMIN,
         sim_alu_SUB,
         sim_alu_SLL,
         sim_alu_SRL,
@@ -178,10 +174,6 @@ begin
 					CurrentOp := sim_OP_NOR;
 				when ALUF_ADD =>
 					CurrentOp := sim_OP_ADD;
-				when ALUF_ADDV =>
-					CurrentOp := sim_OP_ADDV;
-				when ALUF_VMIN =>
-					CurrentOp := sim_OP_VMIN;
 				when ALUF_ADDU =>
 					CurrentOp := sim_OP_ADDU;
 				when ALUF_SUB =>
@@ -229,6 +221,10 @@ begin
 			CurrentOp := sim_OP_SW;
 		when OP_SWV =>
 			CurrentOp := sim_OP_SWV;
+	    when OP_VMIN =>
+	        CurrentOP := sim_OP_VMIN;
+	    when OP_ADDV =>
+	        CurrentOP := sim_OP_ADDV;
 		when others =>
 			CurrentOp := sim_OP_Undefined;
 	end case;

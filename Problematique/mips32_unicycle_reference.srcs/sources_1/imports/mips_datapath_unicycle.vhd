@@ -300,28 +300,31 @@ begin
         s_Data2Reg_muxout(31 downto 0)   <= r_LO;
         s_Data2Reg_muxout(127 downto 32) <= (others => '0');
         
---    elsif(s_opcode = OP_VMIN) then
---        s_Data2Reg_muxout(127 downto 32) <= (others => '0');
---        s_Data2Reg_muxout(31 downto 0) <= s_reg_data1(31 downto 0) when (
---                                                      s_reg_data1(31 downto 0) < s_reg_data1(63 downto 32) and
---                                                      s_reg_data1(31 downto 0) < s_reg_data1(95 downto 64) and
---                                                      s_reg_data1(31 downto 0) < s_reg_data1(127 downto 96))
---                                                      else
---                                          s_reg_data1(63 downto 32) when (
---                                                      s_reg_data1(63 downto 32) < s_reg_data1(31 downto 0)  and
---                                                      s_reg_data1(63 downto 32) < s_reg_data1(95 downto 64) and
---                                                      s_reg_data1(63 downto 32) < s_reg_data1(127 downto 96))
---                                                      else
---                                          s_reg_data1(95 downto 64) when (
---                                                      s_reg_data1(95 downto 64) < s_reg_data1(31 downto 0)  and 
---                                                      s_reg_data1(95 downto 64) < s_reg_data1(63 downto 32) and 
---                                                      s_reg_data1(95 downto 64) < s_reg_data1(127 downto 96))
---                                                      else
---                                          s_reg_data1(127 downto 96) when (
---                                                      s_reg_data1(127 downto 96) < s_reg_data1(31 downto 0)  and
---                                                      s_reg_data1(127 downto 96) < s_reg_data1(63 downto 32) and
---                                                      s_reg_data1(127 downto 96) < s_reg_data1(95 downto 64))
---                                                      else s_reg_data1(31 downto 0);                                                      
+    elsif(s_opcode = OP_VMIN) then
+        s_Data2Reg_muxout(127 downto 32) <= (others => '0');
+        s_Data2Reg_muxout(31 downto 0) <= s_reg_data1(31 downto 0) when (
+                                                      s_reg_data1(31 downto 0) < s_reg_data1(63 downto 32) and
+                                                      s_reg_data1(31 downto 0) < s_reg_data1(95 downto 64) and
+                                                      s_reg_data1(31 downto 0) < s_reg_data1(127 downto 96))
+                                                      else
+                                          s_reg_data1(63 downto 32) when (
+                                                      s_reg_data1(63 downto 32) < s_reg_data1(31 downto 0)  and
+                                                      s_reg_data1(63 downto 32) < s_reg_data1(95 downto 64) and
+                                                      s_reg_data1(63 downto 32) < s_reg_data1(127 downto 96))
+                                                      else
+                                          s_reg_data1(95 downto 64) when (
+                                                      s_reg_data1(95 downto 64) < s_reg_data1(31 downto 0)  and 
+                                                      s_reg_data1(95 downto 64) < s_reg_data1(63 downto 32) and 
+                                                      s_reg_data1(95 downto 64) < s_reg_data1(127 downto 96))
+                                                      else
+                                          s_reg_data1(127 downto 96) when (
+                                                      s_reg_data1(127 downto 96) < s_reg_data1(31 downto 0)  and
+                                                      s_reg_data1(127 downto 96) < s_reg_data1(63 downto 32) and
+                                                      s_reg_data1(127 downto 96) < s_reg_data1(95 downto 64))
+                                                      else s_reg_data1(31 downto 0);  
+    
+    elsif(s_opcode = OP_ADDV) then
+        s_Data2Reg_muxout <= s_reg_data1;
                               
     elsif(i_MemtoReg = '0') then
         s_Data2Reg_muxout <= s_AluResult;

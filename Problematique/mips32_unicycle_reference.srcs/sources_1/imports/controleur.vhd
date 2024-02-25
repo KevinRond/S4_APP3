@@ -78,6 +78,10 @@ begin
 				o_AluFunct <= ALU_ADD;
 			when OP_LWV => 
 				o_AluFunct <= ALU_ADD; 
+		    when OP_ADDV =>
+                s_R_funct_decode <= ALU_ADD;
+            when OP_VMIN =>
+                s_R_funct_decode <= ALU_ADD;
 			-- sinon
             when others =>
 				o_AluFunct <= (others => '0');
@@ -115,10 +119,6 @@ begin
             when ALUF_MFLO => 
                 s_R_funct_decode <= ALU_NULL; 
             -- à compléter au besoin avec d'autres instructions
-            when ALUF_ADDV =>
-                s_R_funct_decode <= ALU_ADDV;
-            when ALUF_VMIN =>
-                s_R_funct_decode <= ALU_VMIN;
             when others =>
                 s_R_funct_decode <= ALU_NULL;
          end case;
@@ -132,7 +132,9 @@ begin
 								i_Op = OP_LUI or 
 								i_Op = OP_LW or 
 								i_Op = OP_LWV or 
-								i_Op = OP_JAL
+								i_Op = OP_JAL or
+								i_Op = OP_VMIN or
+								i_OP = OP_ADDV
 						else '0';
 	
 	o_RegDst 		<= '1' when i_Op = OP_Rtype else '0';
