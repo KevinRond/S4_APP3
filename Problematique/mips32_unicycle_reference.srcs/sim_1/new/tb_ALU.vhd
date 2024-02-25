@@ -48,7 +48,6 @@ begin
         -- Test ALU_ADDV
         a <= X"01020304"; -- Vector [1, 2, 3, 4]
         b <= X"04030201"; -- Vector [4, 3, 2, 1]
-        alu_funct <= ALU_ADDV;
         shamt <= (others => '0');
         wait for CLK_PERIOD;
         assert result = X"05050505" report "ALU_ADDV Test Failed" severity error;
@@ -56,7 +55,6 @@ begin
         -- Test ALU_VMIN
         a <= X"01020304"; -- Vector [1, 2, 3, 4]
         b <= X"00000003"; -- Mot ayant une valeur de 3
-        alu_funct <= ALU_VMIN;
         shamt <= (others => '0');
         wait for CLK_PERIOD;
         assert result = X"00000001" report "ALU_VMIN Test Failed" severity error;
