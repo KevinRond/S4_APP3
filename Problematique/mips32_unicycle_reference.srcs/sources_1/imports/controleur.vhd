@@ -30,6 +30,7 @@ Port (
     o_MemWrite  	: out std_logic;
     o_ALUSrc    	: out std_logic;
     o_RegWrite  	: out std_logic;
+    o_vec           : out std_logic;
 	
 	-- Sorties supp. vs 4.17
     o_Jump 			: out std_logic;
@@ -71,9 +72,16 @@ begin
 				o_AluFunct <= ALU_NULL;
 			when OP_SW => 
 				o_AluFunct <= ALU_ADD;
+			when OP_SWV => 
+				o_AluFunct <= ALU_ADD;
 			when OP_LW => 
 				o_AluFunct <= ALU_ADD;
-            -- when OP_??? =>   -- autres cas?
+			when OP_LWV => 
+				o_AluFunct <= ALU_ADD; 
+		    when OP_ADDV =>
+                o_AluFunct <= ALU_ADD;
+            when OP_VMIN =>
+                o_AluFunct <= ALU_ADD;
 			-- sinon
             when others =>
 				o_AluFunct <= (others => '0');
@@ -123,18 +131,29 @@ begin
 								i_Op = OP_ORI or 
 								i_Op = OP_LUI or 
 								i_Op = OP_LW or 
-								i_Op = OP_JAL
+								i_Op = OP_LWV or 
+								i_Op = OP_JAL or
+								i_Op = OP_VMIN or
+								i_OP = OP_ADDV
 						else '0';
 	
-	o_RegDst 		<= '1' when i_Op = OP_Rtype else '0';
+	o_RegDst 		<= '1' when i_Op = OP_Rtype or i_Op = OP_ADDV else '0';
 	
 	o_ALUSrc 		<= '0' when i_Op = OP_Rtype or
+	                            i_Op = OP_ADDV or
 								i_Op = OP_BEQ
 						else '1';
 	o_Branch 		<= '1' when i_Op = OP_BEQ   else '0';
-	o_MemRead 		<= '1' when i_Op = OP_LW else '0';
-	o_MemWrite 		<= '1' when i_Op = OP_SW else '0';
-	o_MemtoReg 		<= '1' when i_Op = OP_LW else '0';
+	o_MemRead 		<= '1' when i_Op = OP_LW or
+	                            i_Op = OP_LWV
+	                       else '0';
+	o_MemWrite 		<= '1' when i_Op = OP_SW or
+	                            i_Op = OP_SWV
+	                       else '0';
+	o_MemtoReg 		<= '1' when i_Op = OP_LW or
+	                            i_Op = OP_LWV
+	                       else '0';
+	o_vec           <= '1' when i_Op = OP_LWV or i_OP = OP_SWV else '0';
 	o_SignExtend	<= '1' when i_OP = OP_ADDI or
 	                           i_OP = OP_BEQ 
 	                     else '0';

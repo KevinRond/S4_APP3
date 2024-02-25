@@ -1,14 +1,14 @@
 ---------------------------------------------------------------------------------------------
 --
---	Université de Sherbrooke 
---  Département de génie électrique et génie informatique
+--	Universit? de Sherbrooke 
+--  D?partement de g?nie ?lectrique et g?nie informatique
 --
 --	S4i - APP4 
 --	
 --
---	Auteur: 		Marc-André Tétrault
+--	Auteur: 		Marc-Andr? T?trault
 --					Daniel Dalle
---					Sébastien Roy
+--					S?bastien Roy
 -- 
 ---------------------------------------------------------------------------------------------
 
@@ -46,7 +46,7 @@ process
 begin
     reset <= '1';
     wait for clk_cycle * 1; -- 
-    wait for clk_cycle / 5; -- optionnel: relâcher le reset juste après le front d'horloge
+    wait for clk_cycle / 5; -- optionnel: rel?cher le reset juste apr?s le front d'horloge
     reset <= '0';
     wait;
 end process;
@@ -71,7 +71,7 @@ Port map (
 
 -- Monitor pour encapsuler l'espionage du processeur et ne pas confondre avec le code fonctionnel. 
 -- connections virtuelles, pour banc de test seulement.
--- Cette instance DOIT être _après_ l'instance "dut" ("device under test", parfois appelé "unit under test").
+-- Cette instance DOIT ?tre _apr?s_ l'instance "dut" ("device under test", parfois appel? "unit under test").
 inst_monitor: monitor_unicycle; 
 
 

@@ -1,14 +1,14 @@
 ---------------------------------------------------------------------------------------------
 --
---	Université de Sherbrooke 
---  Département de génie électrique et génie informatique
+--	UniversitÃ© de Sherbrooke 
+--  DÃ©partement de gÃ©nie Ã©lectrique et gÃ©nie informatique
 --
 --	S4i - APP4 
 --	
 --
---	Auteurs: 		Marc-André Tétrault
+--	Auteurs: 		Marc-AndrÃ© TÃ©trault
 --					Daniel Dalle
---					Sébastien Roy
+--					SÃ©bastien Roy
 -- 
 ---------------------------------------------------------------------------------------------
 
@@ -129,14 +129,14 @@ end component;
     signal s_MemoryReadData        : std_logic_vector(127 downto 0);
     signal s_AluB_data             : std_logic_vector(31 downto 0);
     
-    -- registres spéciaux pour la multiplication
+    -- registres spÃ©ciaux pour la multiplication
     signal r_HI             : std_logic_vector(31 downto 0);
     signal r_LO             : std_logic_vector(31 downto 0);
 	
 
 begin
 
-o_PC	<= r_PC; -- permet au synthétiseur de sortir de la logique. Sinon, il enlève tout...
+o_PC	<= r_PC; -- permet au synthÃ©tiseur de sortir de la logique. Sinon, il enlÃ¨ve tout...
 
 ------------------------------------------------------------------------
 -- simplification des noms de signaux et transformation des types
@@ -153,7 +153,7 @@ s_jump_field	<= s_Instruction(25 downto  0);
 
 
 ------------------------------------------------------------------------
--- Compteur de programme et mise à jour de valeur
+-- Compteur de programme et mise Ã  jour de valeur
 ------------------------------------------------------------------------
 process(clk)
 begin
@@ -179,7 +179,7 @@ s_PC_Suivant		<= s_adresse_jump when i_jump = '1' else
 					   
 
 ------------------------------------------------------------------------
--- Mémoire d'instructions
+-- MÃ©moire d'instructions
 ------------------------------------------------------------------------
 inst_MemInstr: MemInstructions
 Port map ( 
@@ -187,13 +187,13 @@ Port map (
     o_instruction => s_Instruction
     );
 
--- branchement vers le décodeur d'instructions
+-- branchement vers le dÃ©codeur d'instructions
 o_instruction <= s_Instruction;
 	
 ------------------------------------------------------------------------
 -- Banc de Registres
 ------------------------------------------------------------------------
--- Multiplexeur pour le registre en écriture
+-- Multiplexeur pour le registre en Ã©criture
 s_WriteRegDest_muxout <= c_Registre31 when i_jump_link = '1' else 
                          s_rt         when i_RegDst = '0' else 
 						 s_rd;
@@ -213,13 +213,13 @@ port map (
 	
 
 ------------------------------------------------------------------------
--- ALU (instance, extension de signe et mux d'entrée pour les immédiats)
+-- ALU (instance, extension de signe et mux d'entrÃ©e pour les immÃ©diats)
 ------------------------------------------------------------------------
 -- extension de signe
-s_imm_extended <= std_logic_vector(resize(  signed(s_imm16),32)) when i_SignExtend = '1' else -- extension de signe à 32 bits
+s_imm_extended <= std_logic_vector(resize(  signed(s_imm16),32)) when i_SignExtend = '1' else -- extension de signe Ã  32 bits
 				  std_logic_vector(resize(unsigned(s_imm16),32)); 
 
--- Mux pour immédiats
+-- Mux pour immÃ©diats
 s_AluB_data <= s_reg_data2(31 downto 0) when i_ALUSrc = '0' else s_imm_extended;
 
 inst_Alu: alu 
@@ -267,7 +267,7 @@ port map(
 	);
 
 ------------------------------------------------------------------------
--- Mémoire de données
+-- MÃ©moire de donnÃ©es
 ------------------------------------------------------------------------
 inst_MemDonnees : MemDonnees
 Port map( 
@@ -283,7 +283,7 @@ Port map(
 	
 
 ------------------------------------------------------------------------
--- Mux d'écriture vers le banc de registres
+-- Mux d'Ã©criture vers le banc de registres
 ------------------------------------------------------------------------
 
 process(s_adresse_PC_plus_4, i_jump_link, r_HI, r_LO, i_mfhi, i_mflo, s_AluResult, i_MemtoReg, s_MemoryReadData, s_opcode)
@@ -303,32 +303,31 @@ begin
     elsif(s_opcode = OP_VMIN) then
         s_Data2Reg_muxout(127 downto 32) <= (others => '0');
         s_Data2Reg_muxout(31 downto 0) <= s_reg_data1(31 downto 0) when (
-                                                      s_reg_data1(31 downto 0) <= s_reg_data1(63 downto 32) and
-                                                      s_reg_data1(31 downto 0) <= s_reg_data1(95 downto 64) and
-                                                      s_reg_data1(31 downto 0) <= s_reg_data1(127 downto 96))
+                                                      s_reg_data1(31 downto 0) < s_reg_data1(63 downto 32) and
+                                                      s_reg_data1(31 downto 0) < s_reg_data1(95 downto 64) and
+                                                      s_reg_data1(31 downto 0) < s_reg_data1(127 downto 96))
                                                       else
                                           s_reg_data1(63 downto 32) when (
-                                                      s_reg_data1(63 downto 32) <= s_reg_data1(31 downto 0)  and
-                                                      s_reg_data1(63 downto 32) <= s_reg_data1(95 downto 64) and
-                                                      s_reg_data1(63 downto 32) <= s_reg_data1(127 downto 96))
+                                                      s_reg_data1(63 downto 32) < s_reg_data1(31 downto 0)  and
+                                                      s_reg_data1(63 downto 32) < s_reg_data1(95 downto 64) and
+                                                      s_reg_data1(63 downto 32) < s_reg_data1(127 downto 96))
                                                       else
                                           s_reg_data1(95 downto 64) when (
-                                                      s_reg_data1(95 downto 64) <= s_reg_data1(31 downto 0)  and 
-                                                      s_reg_data1(95 downto 64) <= s_reg_data1(63 downto 32) and 
-                                                      s_reg_data1(95 downto 64) <= s_reg_data1(127 downto 96))
+                                                      s_reg_data1(95 downto 64) < s_reg_data1(31 downto 0)  and 
+                                                      s_reg_data1(95 downto 64) < s_reg_data1(63 downto 32) and 
+                                                      s_reg_data1(95 downto 64) < s_reg_data1(127 downto 96))
                                                       else
                                           s_reg_data1(127 downto 96) when (
-                                                      s_reg_data1(127 downto 96) <= s_reg_data1(31 downto 0)  and
-                                                      s_reg_data1(127 downto 96) <= s_reg_data1(63 downto 32) and
-                                                      s_reg_data1(127 downto 96) <= s_reg_data1(95 downto 64))
+                                                      s_reg_data1(127 downto 96) < s_reg_data1(31 downto 0)  and
+                                                      s_reg_data1(127 downto 96) < s_reg_data1(63 downto 32) and
+                                                      s_reg_data1(127 downto 96) < s_reg_data1(95 downto 64))
                                                       else s_reg_data1(31 downto 0);
     
+    elsif(s_opcode = OP_ADDV) then
+        s_Data2Reg_muxout <= s_reg_data1;
                               
     elsif(i_MemtoReg = '0') then
         s_Data2Reg_muxout <= s_AluResult;
-    
-    elsif(s_opcode = OP_ADDV) then
-        s_Data2Reg_muxout <= s_AluResult;  
                                  
     else
         s_Data2Reg_muxout <= s_MemoryReadData;
@@ -338,7 +337,7 @@ end process;
 
 		
 ------------------------------------------------------------------------
--- Registres spéciaux pour la multiplication
+-- Registres spÃ©ciaux pour la multiplication
 ------------------------------------------------------------------------				
 process(clk)
 begin
