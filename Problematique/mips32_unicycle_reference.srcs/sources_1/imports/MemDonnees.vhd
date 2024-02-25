@@ -36,14 +36,6 @@ architecture Behavioral of MemDonnees is
 ------------------------
 -- Insérez vos donnees ici
 ------------------------
-X"00000000",
-X"00000000",
-X"00000000",
-X"00000000",
-X"ffffffff",
-X"ffffffff",
-X"ffffffff",
-X"ffffffff",
 X"00000004",
 X"00000003",
 X"00000003",
@@ -60,22 +52,15 @@ X"00000002",
 X"00000005",
 X"00000003",
 X"00000002",
+X"00000000",
+X"00000000",
+X"00000000",
+X"00000000",
+X"ffffffff",
+X"ffffffff",
+X"ffffffff",
+X"ffffffff",
 
-------------------------
--- Plan de valid
-------------------------
---X"00000000",
---X"00000000",
---X"00000000",
---X"00000000",
---X"00000001",
---X"00000002",
---X"00000003",
---X"00000004",
---X"00000005",
---X"00000004",
---X"00000003",
---X"00000002",
 ------------------------
 -- Fin de votre code
 ------------------------
@@ -93,8 +78,8 @@ begin
 	process( clk )
     begin
         if clk='1' and clk'event then
-            if i_MemWrite = '1' and reset = '0' and s_MemoryRangeValid = '1' then
-                if i_vec = '0' then
+            if (i_MemWrite = '1' and reset = '0' and s_MemoryRangeValid = '1') then
+                if (i_vec = '0') then
                     ram_DataMemory(s_MemoryIndex) <= i_WriteData(31 downto 0);
                 else
                     ram_DataMemory(s_MemoryIndex + 3) <= i_WriteData(31 downto 0) ; --  when i_CmpData(31 downto 0 )  = x"FFFF";

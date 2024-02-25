@@ -26,6 +26,7 @@ package MIPS32_package is
     constant ALU_SUB  : std_logic_vector( 3 downto 0 ) := "0110";
     constant ALU_SLT  : std_logic_vector( 3 downto 0 ) := "0111";
     
+    
     constant ALU_XOR  : std_logic_vector( 3 downto 0 ) := "1000";
     constant ALU_NOR  : std_logic_vector( 3 downto 0 ) := "1001";
     constant ALU_SLL  : std_logic_vector( 3 downto 0 ) := "1010";
@@ -46,7 +47,6 @@ package MIPS32_package is
     constant ALUF_MFLO      : std_logic_vector( 5 downto 0 ) := "010010";
     constant ALUF_MULTU     : std_logic_vector( 5 downto 0 ) := "011001";
     constant ALUF_ADD       : std_logic_vector( 5 downto 0 ) := "100000";
-    
     constant ALUF_ADDU      : std_logic_vector( 5 downto 0 ) := "100001";
     constant ALUF_SUB       : std_logic_vector( 5 downto 0 ) := "100010";
     constant ALUF_AND       : std_logic_vector( 5 downto 0 ) := "100100";
@@ -67,12 +67,11 @@ package MIPS32_package is
     constant OP_ORI   : std_logic_vector( 5 downto 0 ) := "001101";
     constant OP_LUI   : std_logic_vector( 5 downto 0 ) := "001111";
     constant OP_LW    : std_logic_vector( 5 downto 0 ) := "100011";
-    constant OP_LWV   : std_logic_vector( 5 downto 0 ) := "100111";
+    constant OP_LWV   : std_logic_vector( 5 downto 0 ) := "011100";
     constant OP_SW    : std_logic_vector( 5 downto 0 ) := "101011";
-    constant OP_SWV   : std_logic_vector( 5 downto 0 ) := "101111";
-    constant OP_ADDV  : std_logic_vector( 5 downto 0 ) := "110000";
-    constant OP_VMIN  : std_logic_vector( 5 downto 0 ) := "110001";
-	
+    constant OP_SWV   : std_logic_vector( 5 downto 0 ) := "011101";
+	constant OP_VMIN   : std_logic_vector( 5 downto 0 ) := "110000";
+	constant OP_ADDV  : std_logic_vector( 5 downto 0)  := "101101";
 	
 	constant c_Mips32_Nop	 	: std_logic_vector(31 downto 0) := X"00000000";
 	-- equivalent au c_Mips32_Nop, mais permet de mieux visualiser dans vivado
@@ -91,8 +90,6 @@ package MIPS32_package is
         sim_OP_OR,
 		sim_OP_NOR,
         sim_OP_ADD,
-        sim_OP_ADDV,
-        sim_OP_VMIN,
 		sim_OP_ADDU,
         sim_OP_SUB,
         sim_OP_SLL,
@@ -114,6 +111,8 @@ package MIPS32_package is
 		sim_OP_LWV,
 		sim_OP_SW,
 		sim_OP_SWV,
+		sim_OP_VMIN,
+		sim_OP_ADDV,
 		sim_OP_SYSCALL,
         sim_OP_Undefined
     );
@@ -215,16 +214,16 @@ begin
 			CurrentOp := sim_OP_ORI;
 		when OP_LW =>
 			CurrentOp := sim_OP_LW;
-		when OP_LWV =>
-			CurrentOp := sim_OP_LWV;
+	    when OP_LWV =>
+	        CurrentOp := sim_OP_LWV;
 		when OP_SW =>
 			CurrentOp := sim_OP_SW;
 		when OP_SWV =>
-			CurrentOp := sim_OP_SWV;
-	    when OP_VMIN =>
-	        CurrentOP := sim_OP_VMIN;
-	    when OP_ADDV =>
-	        CurrentOP := sim_OP_ADDV;
+		    CurrentOp := sim_OP_SWV;
+		when OP_VMIN =>
+		    CurrentOP := sim_OP_VMIN;
+		when OP_ADDV =>
+		    CurrentOP := sim_OP_ADDV;
 		when others =>
 			CurrentOp := sim_OP_Undefined;
 	end case;
@@ -237,8 +236,7 @@ function f_DisplayAluAction(alu_funct : std_logic_vector( 3 downto 0 )
                         ) return alu_action_types is 
 	variable CurrentAction : alu_action_types;	
 begin
-
-        
+ 
 	case alu_funct is
 		when ALU_AND =>
 			CurrentAction := sim_alu_AND;

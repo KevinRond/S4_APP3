@@ -79,9 +79,9 @@ begin
 			when OP_LWV => 
 				o_AluFunct <= ALU_ADD; 
 		    when OP_ADDV =>
-                s_R_funct_decode <= ALU_ADD;
+                o_AluFunct <= ALU_ADD;
             when OP_VMIN =>
-                s_R_funct_decode <= ALU_ADD;
+                o_AluFunct <= ALU_ADD;
 			-- sinon
             when others =>
 				o_AluFunct <= (others => '0');
@@ -140,6 +140,7 @@ begin
 	o_RegDst 		<= '1' when i_Op = OP_Rtype else '0';
 	
 	o_ALUSrc 		<= '0' when i_Op = OP_Rtype or
+	                            i_Op = OP_ADDV or
 								i_Op = OP_BEQ
 						else '1';
 	o_Branch 		<= '1' when i_Op = OP_BEQ   else '0';
