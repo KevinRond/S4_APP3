@@ -1,14 +1,14 @@
 ---------------------------------------------------------------------------------------------
 --
---	Université de Sherbrooke 
---  Département de génie électrique et génie informatique
+--	Universit? de Sherbrooke 
+--  D?partement de g?nie ?lectrique et g?nie informatique
 --
 --	S4i - APP4 
 --	
 --
---	Auteur: 		Marc-André Tétrault
+--	Auteur: 		Marc-Andr? T?trault
 --					Daniel Dalle
---					Sébastien Roy
+--					S?bastien Roy
 -- 
 ---------------------------------------------------------------------------------------------
 
@@ -25,9 +25,9 @@ end mips_unicycle_tb;
 architecture Behavioral of mips_unicycle_tb is
 	component mips_unicycle_top is
 	Port ( 
-		clk : in std_logic;
-		reset : in std_logic;
-		o_pc : out std_logic_vector (31 downto 0)
+		clk : in std_ulogic;
+		reset : in std_ulogic;
+		o_pc : out std_ulogic_vector (31 downto 0)
 		);
 	end component;
 	
@@ -36,8 +36,8 @@ architecture Behavioral of mips_unicycle_tb is
 	
     constant clk_cycle : time := 10 ns;
 	
-    signal clk : std_logic;
-    signal reset : std_logic;
+    signal clk : std_ulogic;
+    signal reset : std_ulogic;
 	
 begin
 		   
@@ -45,8 +45,8 @@ begin
 process
 begin
     reset <= '1';
-    wait for clk_cycle * 1; -- 
-    wait for clk_cycle / 5; -- optionnel: relâcher le reset juste après le front d'horloge
+    wait for clk_cycle * 20; -- uniformiser d?lais au requis le plus long (labo 2).
+    wait for clk_cycle / 5; -- optionnel: rel?cher le reset juste apr?s le front d'horloge
     reset <= '0';
     wait;
 end process;
@@ -71,7 +71,7 @@ Port map (
 
 -- Monitor pour encapsuler l'espionage du processeur et ne pas confondre avec le code fonctionnel. 
 -- connections virtuelles, pour banc de test seulement.
--- Cette instance DOIT être _après_ l'instance "dut" ("device under test", parfois appelé "unit under test").
+-- Cette instance DOIT ?tre _apr?s_ l'instance "dut" ("device under test", parfois appel? "unit under test").
 inst_monitor: monitor_unicycle; 
 
 

@@ -47,12 +47,27 @@ begin
     begin
         if clk='1' and clk'event then
             if i_WE = '1' and reset = '0' and i_WDest /= "00000" then
-                regs(int_i_WDest) <= i_Wr_DAT(31 downto 0);
-            elsif int_i_WDest >= 16 and int_i_WDest <= 23 then
-                regs_vec(int_i_WDest - 16) <= i_Wr_DAT;
-            else
-                regs(int_i_WDest - 8) <= i_Wr_DAT(31 downto 0);
+                if int_i_RS2 < 16 then
+                    regs(int_i_WDest) <= i_Wr_DAT(31 downto 0);
+                elsif int_i_WDest >= 16 and int_i_WDest <= 23 then
+                    regs_vec(int_i_WDest - 16) <= i_Wr_DAT;
+                else
+                    regs(int_i_WDest - 8) <= i_Wr_DAT(31 downto 0);
+                end if;
             end if;
+        end if;
+    end process;
+    
+    process(regs, regs_vec, int_i_RS1)
+    begin
+        if int_i_RS1 < 16 then
+            o_RS1_DAT(31 downto 0) <= regs(int_i_RS1);
+            o_RS1_DAT(127 downto 32) <= (others => '0');
+        elsif int_i_RS1 >= 16 and int_i_RS1 <= 23 then
+            o_RS1_DAT <= regs_vec(int_i_RS1 - 16);
+        else
+            o_RS1_DAT(31 downto 0) <= regs(int_i_RS1 - 8);
+            o_RS1_DAT(127 downto 32) <= (others => '0');
         end if;
     end process;
     
