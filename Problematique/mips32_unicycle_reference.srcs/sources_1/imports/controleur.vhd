@@ -137,7 +137,7 @@ begin
 								i_OP = OP_ADDV
 						else '0';
 	
-	o_RegDst 		<= '1' when i_Op = OP_Rtype else '0';
+	o_RegDst 		<= '1' when i_Op = OP_Rtype or i_Op = OP_ADDV else '0';
 	
 	o_ALUSrc 		<= '0' when i_Op = OP_Rtype or
 	                            i_Op = OP_ADDV or
