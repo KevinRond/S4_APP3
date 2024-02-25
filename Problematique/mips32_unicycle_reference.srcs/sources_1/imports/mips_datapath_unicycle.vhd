@@ -321,13 +321,14 @@ begin
                                                       s_reg_data1(127 downto 96) < s_reg_data1(31 downto 0)  and
                                                       s_reg_data1(127 downto 96) < s_reg_data1(63 downto 32) and
                                                       s_reg_data1(127 downto 96) < s_reg_data1(95 downto 64))
-                                                      else s_reg_data1(31 downto 0);  
+                                                      else s_reg_data1(31 downto 0);
     
-    elsif(s_opcode = OP_ADDV) then
-        s_Data2Reg_muxout <= s_reg_data1;
                               
     elsif(i_MemtoReg = '0') then
         s_Data2Reg_muxout <= s_AluResult;
+    
+    elsif(s_opcode = OP_ADDV) then
+        s_Data2Reg_muxout <= s_AluResult;  
                                  
     else
         s_Data2Reg_muxout <= s_MemoryReadData;

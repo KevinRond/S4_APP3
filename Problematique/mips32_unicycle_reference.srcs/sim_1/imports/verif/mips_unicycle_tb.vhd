@@ -25,9 +25,9 @@ end mips_unicycle_tb;
 architecture Behavioral of mips_unicycle_tb is
 	component mips_unicycle_top is
 	Port ( 
-		clk : in std_ulogic;
-		reset : in std_ulogic;
-		o_pc : out std_ulogic_vector (31 downto 0)
+		clk : in std_logic;
+		reset : in std_logic;
+		o_pc : out std_logic_vector (31 downto 0)
 		);
 	end component;
 	
@@ -36,8 +36,8 @@ architecture Behavioral of mips_unicycle_tb is
 	
     constant clk_cycle : time := 10 ns;
 	
-    signal clk : std_ulogic;
-    signal reset : std_ulogic;
+    signal clk : std_logic;
+    signal reset : std_logic;
 	
 begin
 		   
@@ -45,7 +45,7 @@ begin
 process
 begin
     reset <= '1';
-    wait for clk_cycle * 20; -- uniformiser d?lais au requis le plus long (labo 2).
+    wait for clk_cycle * 1; -- 
     wait for clk_cycle / 5; -- optionnel: rel?cher le reset juste apr?s le front d'horloge
     reset <= '0';
     wait;
