@@ -32,6 +32,8 @@ Port (
 	i_ALUSrc      	: in std_logic;
 	i_MemRead 		: in std_logic;
 	i_MemWrite	  	: in std_logic;
+	i_MemReadWide 		: in std_logic;
+	i_MemWriteWide	  	: in std_logic;
 
 	i_jump   	  	: in std_logic;
 	i_jump_register : in std_logic;
@@ -62,7 +64,13 @@ Port (
 	i_MemWrite : in std_logic;
     i_Addresse : in std_logic_vector (31 downto 0);
 	i_WriteData : in std_logic_vector (31 downto 0);
-    o_ReadData : out std_logic_vector (31 downto 0)
+    o_ReadData : out std_logic_vector (31 downto 0);
+    
+    -- ports pour accès à large bus, adresse partagée
+	i_MemReadWide       : in std_logic;
+	i_MemWriteWide 		: in std_logic;
+	i_WriteDataWide 	: in std_logic_vector (127 downto 0);
+    o_ReadDataWide 		: out std_logic_vector (127 downto 0)
 );
 end component;
 
@@ -72,11 +80,11 @@ end component;
 		reset : in std_logic;
 		i_RS1 : in std_logic_vector (4 downto 0);
 		i_RS2 : in std_logic_vector (4 downto 0);
-		i_Wr_DAT : in std_logic_vector (31 downto 0);
+		i_Wr_DAT : in std_logic_vector (127 downto 0);
 		i_WDest : in std_logic_vector (4 downto 0);
 		i_WE : in std_logic;
-		o_RS1_DAT : out std_logic_vector (31 downto 0);
-		o_RS2_DAT : out std_logic_vector (31 downto 0)
+		o_RS1_DAT : out std_logic_vector (127 downto 0);
+		o_RS2_DAT : out std_logic_vector (127 downto 0)
 		);
 	end component;
 
@@ -93,7 +101,7 @@ end component;
 	end component;
 
 	constant c_Registre31		 : std_logic_vector(4 downto 0) := "11111";
-	signal s_zero        : std_logic;
+	signal s_zero        : std_logic_vector(3 downto 0) := "0000";
 	
     signal s_WriteRegDest_muxout: std_logic_vector(4 downto 0);
 	
@@ -113,18 +121,18 @@ end component;
     signal s_instr_funct : std_logic_vector( 5 downto 0);
     signal s_imm16       : std_logic_vector(15 downto 0);
     signal s_jump_field  : std_logic_vector(25 downto 0);
-    signal s_reg_data1        : std_logic_vector(31 downto 0);
-    signal s_reg_data2        : std_logic_vector(31 downto 0);
-    signal s_AluResult             : std_logic_vector(31 downto 0);
+    signal s_reg_data1        : std_logic_vector(127 downto 0);
+    signal s_reg_data2        : std_logic_vector(127 downto 0);
+    signal s_AluResult             : std_logic_vector(127 downto 0);
     signal s_AluMultResult          : std_logic_vector(63 downto 0);
     
-    signal s_Data2Reg_muxout       : std_logic_vector(31 downto 0);
+    signal s_Data2Reg_muxout       : std_logic_vector(127 downto 0);
     
     signal s_imm_extended          : std_logic_vector(31 downto 0);
     signal s_imm_extended_shifted  : std_logic_vector(31 downto 0);
 	
     signal s_Reg_Wr_Data           : std_logic_vector(31 downto 0);
-    signal s_MemoryReadData        : std_logic_vector(31 downto 0);
+    signal s_MemoryReadData        : std_logic_vector(127 downto 0);
     signal s_AluB_data             : std_logic_vector(31 downto 0);
     
     -- registres spéciaux pour la multiplication
@@ -171,8 +179,8 @@ s_adresse_branche				<= std_logic_vector(unsigned(s_imm_extended_shifted) + unsi
 
 -- note, "i_jump_register" n'est pas dans les figures de COD5
 s_PC_Suivant		<= s_adresse_jump when i_jump = '1' else
-                       s_reg_data1 when i_jump_register = '1' else
-					   s_adresse_branche when (i_branch = '1' and s_zero = '1') else
+                       s_reg_data1(31 downto 0) when i_jump_register = '1' else
+					   s_adresse_branche when (i_branch = '1' and s_zero(0) = '1') else
 					   s_adresse_PC_plus_4;
 					   
 
@@ -220,15 +228,48 @@ s_imm_extended <= std_logic_vector(resize(  signed(s_imm16),32)) when i_SignExte
 -- Mux pour immédiats
 s_AluB_data <= s_reg_data2 when i_ALUSrc = '0' else s_imm_extended;
 
-inst_Alu: alu 
+inst_Alu1: alu 
 port map( 
-	i_a         => s_reg_data1,
+	i_a         => s_reg_data1(31 downto 0),
 	i_b         => s_AluB_data,
 	i_alu_funct => i_alu_funct,
 	i_shamt     => s_shamt,
-	o_result    => s_AluResult,
+	o_result    => s_AluResult(31 downto 0),
 	o_multRes   => s_AluMultResult,
-	o_zero      => s_zero
+	o_zero      => s_zero(0)
+	);
+	
+inst_Alu2: alu 
+port map( 
+	i_a         => s_reg_data1(63 downto 32),
+	i_b         => s_reg_data2(63 downto 32),
+	i_alu_funct => i_alu_funct,
+	i_shamt     => s_shamt,
+	o_result    => s_AluResult(31 downto 0),
+	o_multRes   => s_AluMultResult,
+	o_zero      => s_zero(1)
+	);
+	
+inst_Alu3: alu 
+port map( 
+	i_a         => s_reg_data1(95 downto 64),
+	i_b         => s_reg_data2(95 downto 64),
+	i_alu_funct => i_alu_funct,
+	i_shamt     => s_shamt,
+	o_result    => s_AluResult(31 downto 0),
+	o_multRes   => s_AluMultResult,
+	o_zero      => s_zero(2)
+	);
+	
+inst_Alu4: alu 
+port map( 
+	i_a         => s_reg_data1(127 downto 96),
+	i_b         => s_reg_data2(127 downto 96),
+	i_alu_funct => i_alu_funct,
+	i_shamt     => s_shamt,
+	o_result    => s_AluResult(31 downto 0),
+	o_multRes   => s_AluMultResult,
+	o_zero      => s_zero(3)
 	);
 
 ------------------------------------------------------------------------
@@ -240,9 +281,14 @@ Port map(
 	reset 		=> reset,
 	i_MemRead	=> i_MemRead,
 	i_MemWrite	=> i_MemWrite,
-    i_Addresse	=> s_AluResult,
-	i_WriteData => s_reg_data2,
-    o_ReadData	=> s_MemoryReadData
+    i_Addresse	=> s_AluResult(31 downto 0),
+	i_WriteData => s_reg_data2(31 downto 0), -- Sort de l'alu 32 bits
+    o_ReadData	=> s_MemoryReadData(31 downto 0), -- Va vers le mux Data2Reg_muxout
+    -- ports pour accès à large bus, adresse partagée
+	i_MemReadWide => i_MemReadWide,
+	i_MemWriteWide => i_MemWriteWide,
+	i_WriteDataWide => s_reg_data2, -- Devrait sortir de l'alu 128 bits - !!!
+    o_ReadDataWide => s_MemoryReadData -- Va vers Data2Reg_muxout, 
 	);
 	
 
@@ -250,13 +296,29 @@ Port map(
 -- Mux d'écriture vers le banc de registres
 ------------------------------------------------------------------------
 
-s_Data2Reg_muxout    <= s_adresse_PC_plus_4 when i_jump_link = '1' else
-					    r_HI                when i_mfhi = '1' else 
-					    r_LO                when i_mflo = '1' else
-					    s_AluResult         when i_MemtoReg = '0' else 
-						s_MemoryReadData;
+--s_Data2Reg_muxout    <= s_adresse_PC_plus_4 when i_jump_link = '1' else
+--					    r_HI                when i_mfhi = '1' else 
+--					    r_LO                when i_mflo = '1' else
+--					    s_AluResult         when i_MemtoReg = '0' else 
+--						s_MemoryReadData;
 
-
+process(s_adresse_PC_plus_4, i_jump_link, r_HI, r_LO, i_mfhi, i_mflo, s_AluResult, i_MemtoReg, s_MemoryReadData)
+begin
+    if (i_jump_link = '1') then
+        s_Data2Reg_muxout(31 downto 0) <= s_adresse_PC_plus_4;
+        s_Data2Reg_muxout(127 downto 32) <= (others => '0');
+    elsif (i_mfhi = '1') then
+        s_Data2Reg_muxout(31 downto 0) <= r_HI;
+        s_Data2Reg_muxout(127 downto 32) <= (others => '0');
+    elsif (i_mflo = '1') then
+        s_Data2Reg_muxout(31 downto 0) <= r_LO;
+        s_Data2Reg_muxout(127 downto 32) <= (others => '0');
+    elsif (i_MemToReg = '1') then
+        s_Data2Reg_muxout <= s_AluResult;
+    else
+        s_Data2Reg_muxout <= s_MemoryReadData;
+    end if;
+end process;
 		
 ------------------------------------------------------------------------
 -- Registres spéciaux pour la multiplication

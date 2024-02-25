@@ -18,7 +18,7 @@ use IEEE.STD_LOGIC_1164.ALL;
 use ieee.numeric_std.all; -- requis pour la fonction "to_integer"
 use work.MIPS32_package.all;
 
-entity MemDonneesWideDual is
+entity MemDonnees is
 Port ( 
 	clk 		: in std_logic;
 	reset 		: in std_logic;
@@ -34,9 +34,9 @@ Port (
 	i_WriteDataWide 	: in std_logic_vector (127 downto 0);
     o_ReadDataWide 		: out std_logic_vector (127 downto 0)
 );
-end MemDonneesWideDual;
+end MemDonnees;
 
-architecture Behavioral of MemDonneesWideDual is
+architecture Behavioral of MemDonnees is
     signal ram_DataMemory : RAM(0 to 255) := ( -- type défini dans le package
   
 ------------------------
