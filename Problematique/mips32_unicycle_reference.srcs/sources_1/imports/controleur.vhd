@@ -30,6 +30,7 @@ Port (
     o_MemWrite  	: out std_logic;
     o_ALUSrc    	: out std_logic;
     o_RegWrite  	: out std_logic;
+    o_vec           : out std_logic;
 	
 	-- Sorties supp. vs 4.17
     o_Jump 			: out std_logic;
@@ -149,6 +150,7 @@ begin
 	o_MemtoReg 		<= '1' when i_Op = OP_LW or
 	                            i_Op = OP_LWV
 	                       else '0';
+	o_vec           <= '1' when i_Op = OP_LWV or i_OP = OP_SWV else '0';
 	o_SignExtend	<= '1' when i_OP = OP_ADDI or
 	                           i_OP = OP_BEQ 
 	                     else '0';

@@ -98,6 +98,7 @@ begin
                 end if;
             when ALU_MULTU =>
                 s_multRes <= std_logic_vector(unsigned(i_a) * unsigned(i_b));
+                s_result  <= (others => '0');
             when ALU_NULL => 
 				s_result <= (others => '0');
             when others =>

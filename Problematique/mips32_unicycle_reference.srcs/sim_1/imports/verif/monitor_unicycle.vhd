@@ -44,9 +44,11 @@ EncapsulerExtraction: block
     constant c_EndProgramCode : integer := 10;
     
 	signal s_Instruction		: std_logic_vector (31 downto 0);
-    signal regs                     : RAM(0 to 31);
+    signal regs                 : RAM(0 to 23);
+    signal regs_vec             : RAM128(0 to 7);
 begin
 	regs                <= <<signal .mips_unicycle_tb.dut.inst_Datapath.inst_Registres.regs : RAM>>;
+	regs_vec            <= <<signal .mips_unicycle_tb.dut.inst_Datapath.inst_Registres.regs_vec : RAM128>>;
 	s_Instruction		<= <<signal .mips_unicycle_tb.dut.inst_Datapath.s_Instruction : std_logic_vector>>;
 	
 	show_Instruction	<= f_DisplayOp(s_Instruction);
