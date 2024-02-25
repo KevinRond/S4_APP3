@@ -245,7 +245,7 @@ port map(
 	i_b         => s_reg_data2(63 downto 32),
 	i_alu_funct => i_alu_funct,
 	i_shamt     => s_shamt,
-	o_result    => s_AluResult(31 downto 0),
+	o_result    => s_AluResult(63 downto 32),
 	o_multRes   => s_AluMultResult,
 	o_zero      => s_zero(1)
 	);
@@ -256,7 +256,7 @@ port map(
 	i_b         => s_reg_data2(95 downto 64),
 	i_alu_funct => i_alu_funct,
 	i_shamt     => s_shamt,
-	o_result    => s_AluResult(31 downto 0),
+	o_result    => s_AluResult(95 downto 64),
 	o_multRes   => s_AluMultResult,
 	o_zero      => s_zero(2)
 	);
@@ -267,7 +267,7 @@ port map(
 	i_b         => s_reg_data2(127 downto 96),
 	i_alu_funct => i_alu_funct,
 	i_shamt     => s_shamt,
-	o_result    => s_AluResult(31 downto 0),
+	o_result    => s_AluResult(127 downto 96),
 	o_multRes   => s_AluMultResult,
 	o_zero      => s_zero(3)
 	);
@@ -302,7 +302,7 @@ Port map(
 --					    s_AluResult         when i_MemtoReg = '0' else 
 --						s_MemoryReadData;
 
-process(s_adresse_PC_plus_4, i_jump_link, r_HI, r_LO, i_mfhi, i_mflo, s_AluResult, i_MemtoReg, s_MemoryReadData)
+process(s_adresse_PC_plus_4, i_jump_link, r_HI, r_LO, i_mfhi, i_mflo, s_AluResult, i_MemtoReg, s_MemoryReadData, s_opcode)
 begin
     if (i_jump_link = '1') then
         s_Data2Reg_muxout(31 downto 0) <= s_adresse_PC_plus_4;
@@ -315,6 +315,28 @@ begin
         s_Data2Reg_muxout(127 downto 32) <= (others => '0');
     elsif (i_MemToReg = '1') then
         s_Data2Reg_muxout <= s_AluResult;
+    elsif (s_opcode = ALUF_ADDV) then
+        s_Data2Reg_muxout(31 downto 0) <= s_reg_data1(31 downto 0) when (
+                                                      s_reg_data1(31 downto 0) < s_reg_data1(63 downto 32) and
+                                                      s_reg_data1(31 downto 0) < s_reg_data1(95 downto 64) and
+                                                      s_reg_data1(31 downto 0) < s_reg_data1(127 downto 96))
+                                                      else
+                                          s_reg_data1(63 downto 32) when (
+                                                      s_reg_data1(63 downto 32) < s_reg_data1(31 downto 0)  and
+                                                      s_reg_data1(63 downto 32) < s_reg_data1(95 downto 64) and
+                                                      s_reg_data1(63 downto 32) < s_reg_data1(127 downto 96))
+                                                      else
+                                          s_reg_data1(95 downto 64) when (
+                                                      s_reg_data1(95 downto 64) < s_reg_data1(31 downto 0)  and 
+                                                      s_reg_data1(95 downto 64) < s_reg_data1(63 downto 32) and 
+                                                      s_reg_data1(95 downto 64) < s_reg_data1(127 downto 96))
+                                                      else
+                                          s_reg_data1(127 downto 96) when (
+                                                      s_reg_data1(127 downto 96) < s_reg_data1(31 downto 0)  and
+                                                      s_reg_data1(127 downto 96) < s_reg_data1(63 downto 32) and
+                                                      s_reg_data1(127 downto 96) < s_reg_data1(95 downto 64))
+                                                      else s_reg_data1(31 downto 0);
+        s_Data2Reg_muxout(127 downto 32) <= (others => '0');
     else
         s_Data2Reg_muxout <= s_MemoryReadData;
     end if;
