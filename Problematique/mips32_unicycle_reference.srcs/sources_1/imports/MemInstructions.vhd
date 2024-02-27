@@ -60,9 +60,38 @@ architecture Behavioral of MemInstructions is
 ------------------------
 -- Test UNITAIRES
 ------------------------
--- LW dans un registre vide
-X"3c011001", --LA
+-- LWV dans un registre vide
+X"3c011001", -- LA $a0, (4 premieres donnees en memoire)
 X"34240000",
+X"70900000", -- LWV $s0, 0($a0)
+
+-- LWV dans un registre utilisé
+X"3c011001", -- LA $a0, (donnees aux adresses 10010010 a 101001c)
+X"34240010",
+X"70900000", -- LWV $s0, 0($a0)
+
+-- VMIN dans un registre vide
+X"3c011001", -- LA $a1, (donnees aux adresses 10010020 a 101002C)
+X"34250020",
+X"70b10000", -- LWV $s1, 0($a1)
+X"C22A0000", -- vmin $t0, $s1
+
+-- VMIN dans un registre utilisé
+X"3c011001", -- LA $a0, (donnees aux adresses 10010030 a 101003C)
+X"34250030",
+X"70b10000", -- LWV $s1, 0($a0)
+X"C22A0000", -- vmin $t0, $s1
+
+-- ADDV de 2 vecteurs
+X"3c011001", -- LA $a0, (4 premieres donnees en memoire)
+X"34240000",
+X"70b10000", -- LWV $s1, 0($a0)
+
+X"3c011001", -- LA $a1, (donnees aux adresses 10010040 a 101004C)
+X"34250040",
+X"70D20000", -- LWV $s2, 0($a1)
+
+X"B6818020", -- ADDV $s0, $s1, $s2 
 
 
 
